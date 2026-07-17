@@ -1,0 +1,10 @@
+;; Real-world organization identity/contact.
+;; :head-role is institutional title only -- no personal names.
+{:name-en "UCCAEP (Unión Costarricense de Cámaras y Asociaciones del Sector Empresarial Privado)"
+ :abbreviation "UCCAEP"
+ :official-url "https://www.uccaep.org/"
+ :isic "9411"
+ :country "CRI"
+ :established-date "1973"
+ :head-role-note "institutional office title only (President); personal names of current/former office-holders incidentally encountered but never persisted here"
+ :sourced-from "neither uccaep.or.cr nor uccaep.org rendered founding-history detail on any page tried this tick (multiple pages checked on both domains). Verified instead directly (WebFetch) against a Costa Rican legal database (vlex.co.cr), independent of UCCAEP itself, which states verbatim: 'en conmemoración de la fecha de creación de la Unión Costarricense de Cámaras y Asociaciones del Sector Empresarial Privado (Uccaep) ... la cual en el año 1998 celebró su 25° aniversario' (1998 minus 25 years = 1973 founding), and 'mediante el Decreto Ejecutivo 27442-C, de 12 de noviembre de 1998, se declaró el 23 de febrero de cada año como Día Nacional de la Empresa Privada'. The exact day/month of the original founding is not confirmed by this source -- only the year, via anniversary arithmetic -- so only '1973' is asserted here, not a specific day."}

@@ -1,0 +1,25 @@
+;; data/datascript-tx.edn — DataScript tx-data derived from src/association/facts.cljc
+;; `association.facts/catalog` (ADR-2607141700 Wave 0). Same shape as sibling files.
+
+[#:association-rule{:id "uccaep.founding-1973"
+                     :title "UCCAEP (Unión Costarricense de Cámaras y Asociaciones del Sector Empresarial Privado) founded in 1973 (derived from vLex legal database's direct quote that UCCAEP celebrated its 25th anniversary in 1998; exact day/month not confirmed by this source, so only the year is asserted)"
+                     :association "uccaep"
+                     :isic "9411"
+                     :country "CRI"
+                     :kind :governance-program
+                     :url "https://vlex.co.cr/vid/declaracion-dia-nacional-empresa-940167862"
+                     :url-provenance :legal-database-corroborated
+                     :established-date "1973"
+                     :retrieved-at "2026-07-18"
+                     :topic [:governance]}
+ #:association-rule{:id "uccaep.national-private-enterprise-day-decree-1998"
+                     :title "Costa Rica's Executive Decree 27442-C, of 12 November 1998, declared 23 February of each year as 'Día Nacional de la Empresa Privada' in honor of UCCAEP's 25th anniversary (vLex legal database)"
+                     :association "uccaep"
+                     :isic "9411"
+                     :country "CRI"
+                     :kind :governance-program
+                     :url "https://vlex.co.cr/vid/declaracion-dia-nacional-empresa-940167862"
+                     :url-provenance :legal-database-corroborated
+                     :established-date "1998-11-12"
+                     :retrieved-at "2026-07-18"
+                     :topic [:governance]}]
