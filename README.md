@@ -1,8 +1,8 @@
 # cloud-itonami-assoc-9411-cri-uccaep
 
 Industry rule/history catalog for **UCCAEP** (Unión Costarricense de
-Cámaras y Asociaciones del Sector Empresarial Privado) — the
-TWENTY-THIRD entry aligned to **ISIC 9411** (activities of business,
+Cámaras y Asociaciones del Sector Empresarial Privado) — an
+entry aligned to **ISIC 9411** (activities of business,
 employers, and professional membership organizations), alongside
 [`-9411-sau-fsc`](https://github.com/cloud-itonami/cloud-itonami-assoc-9411-sau-fsc)
 (Saudi Arabia),
@@ -62,13 +62,49 @@ municipality
 ([`cloud-itonami-municipality-cri-san-jose`](https://github.com/cloud-itonami/cloud-itonami-municipality-cri-san-jose)),
 and association (this repo).
 
-Neither `uccaep.or.cr` nor `uccaep.org` rendered founding-history
-detail on any page tried this tick. Both entries here were instead
-directly WebFetch-verified against a Costa Rican legal database
-(`vlex.co.cr`), independent of UCCAEP itself. Since that source
-explicitly does not confirm the exact day/month of the founding
-(only the year, derived from a 25th-anniversary reference), this
-catalog states only "1973" rather than asserting a specific day.
+Twenty entries, each carrying the page it came from
+(`:source-article`) and the verbatim span the claim rests on
+(`:source-quote`). Eighteen are first-party `uccaep.org` pages and
+documents — the statutes (PDF), Executive Decree 35658-J as printed
+in La Gaceta (PDF, hosted by UCCAEP), the code of business practice
+(PDF), the 2020-2021 annual report (PDF), and the mission, principles,
+objectives, BIAC/OIE, competitiveness-agenda, annual-report and board
+pages. Two rest on `vlex.co.cr` for the founding.
+
+**The July note that "neither `uccaep.or.cr` nor `uccaep.org`
+rendered founding-history detail" is half-true and has been
+replaced.** Measured 2026-09-11: both hosts serve the same site, and
+it serves everything above. What it still does not serve, on any page
+tried, is a founding year. `1973` is reached only by arithmetic —
+vLex quotes Executive Decree 27442-C commemorating UCCAEP's creation
+because it "en el año 1998 celebró su 25° aniversario" — so the
+founding entry records that derivation (`:date-derivation
+:anniversary-arithmetic`) and the checker verifies the subtraction
+rather than looking for a year no source writes. 23 February is the
+commemorative day the decree chose; it is not asserted as the
+founding day.
+
+The decree's own recitals give a *registry* date — the association
+has been inscribed in the Registro de Asociaciones since 14 April
+2004 (tomo 1, asiento 44) — which is recorded as what it is, not as
+the founding.
+
+### Reachability is not support
+
+A URL that returns HTTP 200 without the claim reads exactly like one
+that carries it, so every entry pins a verbatim span and `--live`
+requires that span to still be in the fetched page.
+
+And on this host, HTTP 200 is not even reachability. `uccaep.org`
+answers a path that does not exist with its home page and a 200
+(measured 2026-09-11: `/objetivos-no-such-page.html` → 200, 52,726
+bytes, the home page). A rotted URL therefore stays "reachable", and
+a quote that also appears on the home page — one entry here was
+exactly that shape until its span was changed — would still
+"support" it. So `--live` also fetches, per origin, a control path
+that cannot exist, and reports `[soft-404]` for any source whose page
+is the control's answer. Shown to bite: a one-character typo in a
+PDF's filename produced exactly that finding.
 
 ## Scope
 
@@ -81,11 +117,51 @@ fabricate one.
 
 ## Data
 
-- `src/association/facts.cljc` — the catalog, source of truth.
+`data/datascript-tx.edn` is **the only place the facts are
+authored**. Both readings are generated from it:
+
+- `data/datascript-tx.edn` — the catalog, source of truth.
+- `src/association/facts.kotoba` — the Clojure reading
+  (`association.facts`). Generated.
+- `src/association_facts.kotoba` — the Kotoba port, which reaches
+  the Kotoba oracle, wasm and both native ISAs. Generated.
 - `schema/association-rule.edn` — DataScript schema.
-- `data/datascript-tx.edn` — derived DataScript tx-data (query this
-  alongside other `cloud-itonami`/`etzhayyim` compliance-fact sources via
-  `com-junkawasaki/root`'s `scripts/compliance-fact-query.cljs`).
+
+Query it alongside other `cloud-itonami`/`etzhayyim` compliance-fact
+sources via `com-junkawasaki/root`'s
+`scripts/compliance-fact-query.cljs`.
+
+Dates are ISO with `:date-precision` saying how precisely the *source*
+dates the fact. Costa Rican decrees write dates in words (`once de
+noviembre de dos mil nueve`) and the Gazette writes `6 de enero del
+2010`; the checker builds those Spanish forms for the specific date
+being checked, so a span that names the date is accepted and one that
+does not is a finding either way. An entry with no date says why
+(`:date-unknown-because`); the statutes PDF, for instance, carries no
+date in its text although the site names it "actualizados mayo 2016".
+
+No personal name of any office-holder is persisted. The staff and
+board pages carry names; they are cited only for what they say about
+the institution.
+
+## Checking it
+
+```
+nbb scripts/verify-catalog.cljs          # structural, offline
+nbb scripts/verify-catalog.cljs --live   # fetch every :url (needs curl +
+                                         # pdftotext), require every
+                                         # :source-quote to still be in it,
+                                         # and run the soft-404 control
+nbb scripts/gen-kotoba-port.cljs --check # both readings match the data
+clojure -M:parity                        # compile the Kotoba port and
+                                         # compare every field of every
+                                         # entry with the Clojure reading
+```
+
+Exit codes: `0` clean, `1` findings, `2` REFUSED (could not check —
+not a pass). `clojure -M:test` collects nothing since the 2026-09-10
+rename of `.clj`/`.cljc` to `.kotoba` and exits 0; `-M:parity` loads
+both `.kotoba` files by path and is the run that counts.
 
 ## License
 

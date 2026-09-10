@@ -16,7 +16,14 @@
  :association-rule/kind {:db/index true}
  :association-rule/url {}
  :association-rule/url-provenance {:db/index true}
+ :association-rule/source-article {}
+ :association-rule/source-quote {}
  :association-rule/established-date {}
  :association-rule/last-revised-date {}
+ :association-rule/date-precision {:db/index true}
+ :association-rule/date-unknown-because {:db/index true}
+ ;; How a date the quote does not write was reached from what it does write.
+ ;; One value so far (:anniversary-arithmetic); the checker verifies it.
+ :association-rule/date-derivation {:db/index true}
  :association-rule/retrieved-at {}
  :association-rule/topic {:db/cardinality :db.cardinality/many :db/index true}}
