@@ -11,6 +11,18 @@
                        :git/sha "f5cf064366591ea729441b41143cc99e18e8239a"}}
          :main-opts ["-m" "cognitect.test-runner"]
          :exec-fn cognitect.test-runner.api/test}
+  ;; Both suites, run by path. `clojure -M:test` collects nothing since the
+  ;; 2026-09-10 rename of .clj/.cljc to .kotoba (measured: "Ran 0 tests", exit
+  ;; 0), and `association.facts` is not on any classpath as a .clj. This alias
+  ;; loads both .kotoba files by path, marks the facts namespace as loaded so
+  ;; the test's `(:require [association.facts])` resolves, and exits 1 on any
+  ;; failure. It shares :test's amu pin. Run: clojure -M:parity
+  :parity {:extra-paths ["test"]
+           :extra-deps {io.github.kotoba-lang/amu
+                        {:git/url "https://github.com/kotoba-lang/amu.git"
+                         :git/sha "f5cf064366591ea729441b41143cc99e18e8239a"}}
+           :main-opts ["-e"
+                       "(load-file \"src/association/facts.kotoba\") (dosync (alter @#'clojure.core/*loaded-libs* conj 'association.facts)) (load-file \"test/association/facts_test.kotoba\") (load-file \"test/association_facts_kotoba_parity_test.kotoba\") (let [r (clojure.test/run-tests 'association.facts-test 'association-facts-kotoba-parity-test)] (println \"PARITY\" (pr-str (select-keys r [:test :pass :fail :error]))) (System/exit (if (and (zero? (:fail r)) (zero? (:error r))) 0 1)))"]}
   :lint {:replace-deps {clj-kondo/clj-kondo {:mvn/version "2024.11.14"}}
          :main-opts    ["-m" "clj-kondo.main"
                         "--lint" "src" "test"

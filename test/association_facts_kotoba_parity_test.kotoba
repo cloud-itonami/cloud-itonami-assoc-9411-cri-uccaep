@@ -11,8 +11,26 @@
   `:association-rule/topic` is a SET. A set has no order and `topic` is indexed
   by position, so the port chose the order the data file writes; the assertion
   below compares against that written order rather than against `seq` on a set,
-  which is not stable to rely on."
+  which is not stable to rely on. That order is READ FROM the data file rather
+  than restated here: it used to be a literal, and a literal of length two is
+  what a two-entry catalog leaves behind when the catalog grows to twenty.
+
+  NOTE (2026-09-11): `clojure -M:test` does not collect this suite. The owner's
+  2026-09-10 rename of .clj/.cljc to .kotoba means the test runner finds no
+  .clj namespaces -- measured on this repo's main: \"Ran 0 tests containing 0
+  assertions.\", exit 0 -- and `association.facts` cannot be `require`d from
+  the classpath. That state is deliberate and is not reverted here. This file
+  is still RUN, by loading the .kotoba files by path -- `clojure -M:parity`
+  (the alias in deps.edn; it cannot ride on :test because that alias's
+  :main-opts are the runner, which then swallows any -e/-i as its own
+  arguments -- measured: the runner ran and printed the same zero) --
+
+  which is what `nbb scripts/gen-kotoba-port.cljs --check` cannot do: --check
+  proves both readings are what the generator writes; this proves the Kotoba
+  reading, compiled and executed, answers every field of every entry the way
+  the Clojure reading does."
   (:require [clojure.test :refer [deftest is testing]]
+            [clojure.edn :as edn]
             [association.facts :as facts]
             [kotoba.compiler.core :as compiler]
             [kotoba.kir :as ir]))
@@ -25,16 +43,19 @@
 (def ^:private slug "uccaep")
 (def ^:private fields
   ["id" "title" "association" "isic" "country" "kind" "url" "url-provenance"
-   "established-date" "retrieved-at"])
+   "source-article" "source-quote" "established-date" "last-revised-date"
+   "date-unknown-because" "date-precision" "date-derivation" "retrieved-at"])
 (def ^:private kw->field
-  {"id" :association-rule/id "title" :association-rule/title
-   "association" :association-rule/association "isic" :association-rule/isic
-   "country" :association-rule/country "kind" :association-rule/kind
-   "url" :association-rule/url "url-provenance" :association-rule/url-provenance
-   "established-date" :association-rule/established-date
-   "retrieved-at" :association-rule/retrieved-at})
+  (into {} (map (fn [f] [f (keyword "association-rule" f)]) fields)))
 (def ^:private entries (vec (facts/spec-basis slug)))
-(def ^:private topic-order [["governance"] ["governance"]])
+
+;; The order the data file writes, read from the data file. `topic` is indexed
+;; by position and a set has no order, so something has to fix one; the
+;; generator uses the data file's vector, so that is what this compares
+;; against. Reading it here means this constant cannot fall behind the catalog.
+(def ^:private topic-order
+  (mapv #(mapv name (:association-rule/topic %))
+        (edn/read-string (slurp "data/datascript-tx.edn"))))
 
 (deftest the-fixture-reads-a-real-catalog
   ;; An empty catalog compares equal to an empty port.

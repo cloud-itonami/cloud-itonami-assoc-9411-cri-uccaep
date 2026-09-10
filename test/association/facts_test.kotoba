@@ -1,12 +1,27 @@
 (ns association.facts-test
+  "The Clojure reading of the UCCAEP catalog, checked against the data file it
+  is generated from. Counts are READ from data/datascript-tx.edn rather than
+  written here: this file used to say `(= 2 (count sb))`, which was true of a
+  two-entry catalog and would have been a dormant lie the day the catalog
+  grew -- and dormant is what this suite is (see the parity test's docstring;
+  `clojure -M:parity` runs both)."
   (:require [clojure.test :refer [deftest is]]
+            [clojure.edn :as edn]
             [association.facts :as facts]))
+
+(def ^:private data (edn/read-string (slurp "data/datascript-tx.edn")))
+
+(deftest the-data-file-is-not-empty
+  ;; Every count below would agree on zero.
+  (is (pos? (count data))))
 
 (deftest uccaep-has-spec-basis
   (let [sb (facts/spec-basis "uccaep")]
-    (is (= 2 (count sb)))
+    (is (= (count data) (count sb)))
+    (is (= (mapv :association-rule/id data) (mapv :association-rule/id sb)))
     (is (every? #(= "9411" (:association-rule/isic %)) sb))
-    (is (every? #(= "CRI" (:association-rule/country %)) sb))))
+    (is (every? #(= "CRI" (:association-rule/country %)) sb))
+    (is (every? #(clojure.string/starts-with? (:association-rule/url %) "https://") sb))))
 
 (deftest unknown-association-has-no-spec-basis
   (is (nil? (facts/spec-basis "ibec")))
@@ -19,6 +34,8 @@
     (is (= ["ibec"] (:missing-associations c)))))
 
 (deftest by-topic-filters
-  (is (= 2 (count (facts/by-topic "uccaep" :governance))))
+  (let [governance-in-data (count (filter #(some #{:governance} (:association-rule/topic %)) data))]
+    (is (pos? governance-in-data))
+    (is (= governance-in-data (count (facts/by-topic "uccaep" :governance)))))
   (is (empty? (facts/by-topic "uccaep" :labor)))
   (is (empty? (facts/by-topic "ibec" :governance))))
