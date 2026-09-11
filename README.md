@@ -147,12 +147,12 @@ the institution.
 ## Checking it
 
 ```
-nbb scripts/verify-catalog.cljs          # structural, offline
-nbb scripts/verify-catalog.cljs --live   # fetch every :url (needs curl +
+nbb scripts/verify-catalog.cljk          # structural, offline
+nbb scripts/verify-catalog.cljk --live   # fetch every :url (needs curl +
                                          # pdftotext), require every
                                          # :source-quote to still be in it,
                                          # and run the soft-404 control
-nbb scripts/gen-kotoba-port.cljs --check # both readings match the data
+nbb scripts/gen-kotoba-port.cljk --check # both readings match the data
 clojure -M:parity                        # compile the Kotoba port and
                                          # compare every field of every
                                          # entry with the Clojure reading
