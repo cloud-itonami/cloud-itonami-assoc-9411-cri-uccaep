@@ -4,7 +4,7 @@
   written here: this file used to say `(= 2 (count sb))`, which was true of a
   two-entry catalog and would have been a dormant lie the day the catalog
   grew -- and dormant is what this suite is (see the parity test's docstring;
-  `clojure -M:parity` runs both)."
+  `kbb -M:parity` runs both)."
   (:require [clojure.test :refer [deftest is]]
             [clojure.edn :as edn]
             [association.facts :as facts]))

@@ -147,19 +147,19 @@ the institution.
 ## Checking it
 
 ```
-nbb scripts/verify-catalog.cljk          # structural, offline
-nbb scripts/verify-catalog.cljk --live   # fetch every :url (needs curl +
+kbb --backend sci scripts/verify-catalog.cljk          # structural, offline
+kbb --backend sci scripts/verify-catalog.cljk --live   # fetch every :url (needs curl +
                                          # pdftotext), require every
                                          # :source-quote to still be in it,
                                          # and run the soft-404 control
-nbb scripts/gen-kotoba-port.cljk --check # both readings match the data
-clojure -M:parity                        # compile the Kotoba port and
+kbb --backend sci scripts/gen-kotoba-port.cljk --check # both readings match the data
+kbb -M:parity                        # compile the Kotoba port and
                                          # compare every field of every
                                          # entry with the Clojure reading
 ```
 
 Exit codes: `0` clean, `1` findings, `2` REFUSED (could not check —
-not a pass). `clojure -M:test` collects nothing since the 2026-09-10
+not a pass). `kbb -M:test` collects nothing since the 2026-09-10
 rename of `.clj`/`.cljc` to `.kotoba` and exits 0; `-M:parity` loads
 both `.kotoba` files by path and is the run that counts.
 
