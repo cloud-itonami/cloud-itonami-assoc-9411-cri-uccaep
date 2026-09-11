@@ -25,7 +25,7 @@
   :main-opts are the runner, which then swallows any -e/-i as its own
   arguments -- measured: the runner ran and printed the same zero) --
 
-  which is what `nbb scripts/gen-kotoba-port.cljs --check` cannot do: --check
+  which is what `nbb scripts/gen-kotoba-port.cljk --check` cannot do: --check
   proves both readings are what the generator writes; this proves the Kotoba
   reading, compiled and executed, answers every field of every entry the way
   the Clojure reading does."
