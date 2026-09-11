@@ -1,6 +1,6 @@
 ;; data/datascript-tx.edn — the UCCAEP catalog. THIS FILE IS WHERE THE FACTS
 ;; ARE AUTHORED. Both readings under src/ are generated from it by
-;; scripts/gen-kotoba-port.cljk; `nbb scripts/verify-catalog.cljk --live`
+;; scripts/gen-kotoba-port.cljk; `kbb --backend sci scripts/verify-catalog.cljk --live`
 ;; fetches every :url and requires every :source-quote to still be in it.
 ;;
 ;; Every entry carries the page it came from (:source-article) and the

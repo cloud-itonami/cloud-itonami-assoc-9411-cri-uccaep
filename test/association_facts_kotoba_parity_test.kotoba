@@ -15,17 +15,17 @@
   than restated here: it used to be a literal, and a literal of length two is
   what a two-entry catalog leaves behind when the catalog grows to twenty.
 
-  NOTE (2026-09-11): `clojure -M:test` does not collect this suite. The owner's
+  NOTE (2026-09-11): `kbb -M:test` does not collect this suite. The owner's
   2026-09-10 rename of .clj/.cljc to .kotoba means the test runner finds no
   .clj namespaces -- measured on this repo's main: \"Ran 0 tests containing 0
   assertions.\", exit 0 -- and `association.facts` cannot be `require`d from
   the classpath. That state is deliberate and is not reverted here. This file
-  is still RUN, by loading the .kotoba files by path -- `clojure -M:parity`
+  is still RUN, by loading the .kotoba files by path -- `kbb -M:parity`
   (the alias in deps.edn; it cannot ride on :test because that alias's
   :main-opts are the runner, which then swallows any -e/-i as its own
   arguments -- measured: the runner ran and printed the same zero) --
 
-  which is what `nbb scripts/gen-kotoba-port.cljk --check` cannot do: --check
+  which is what `kbb --backend sci scripts/gen-kotoba-port.cljk --check` cannot do: --check
   proves both readings are what the generator writes; this proves the Kotoba
   reading, compiled and executed, answers every field of every entry the way
   the Clojure reading does."
