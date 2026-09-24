@@ -71,7 +71,7 @@
 ;; the second half stays a measurement rather than a memory.
 
 (ns verify-catalog
-  (:require [clojure.edn :as edn]
+  (:require [kotoba.lang.edn :as edn]
             [clojure.string :as str]
             ["fs" :as fs]
             ["os" :as os]
